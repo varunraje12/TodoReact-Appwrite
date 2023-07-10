@@ -59,10 +59,35 @@ const Dashboard = () => {
     }
   }
 
+
+
+  const update = async (id) => {
+    try {
+      console.log(email)
+      let res = await database.updateDocument(process.env.REACT_APP_DB_ID, process.env.REACT_APP_COLLECTION_ID, id, {
+        todos: 'I have completed it'
+      })
+      console.log(res.documents)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+
+  const del = async (id) => {
+    try {
+      console.log(email)
+      let res = await database.deleteDocument(process.env.REACT_APP_DB_ID, process.env.REACT_APP_COLLECTION_ID, id)
+      console.log(res.documents)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   useEffect(() => {
     islogin();
     viewtodo();
-  }, [email])
+  }, [email, alltodo])
 
 
 
@@ -81,13 +106,18 @@ const Dashboard = () => {
           />
           <button onClick={Addtodo} className=" mt-2 px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Add</button>
         </div>
-        <div>
+        {alltodo ? <div>
           {alltodo.map(e => {
             return (
-              <p>{e.todos}</p>
+              <>
+                <p>{e.todos}</p>
+                <button onClick={() => update(e.$id)}>Update</button>
+                <button onClick={() => del(e.$id)}>Delete</button>
+              </>
+
             )
           })}
-        </div>
+        </div> : 'loading...'}
       </div> : <>Loading.....</>}
     </div>
   )
